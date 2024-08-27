@@ -1,4 +1,5 @@
 import { Application, Request, Response, NextFunction } from "express";
+import * as all from '../interface';
 
 import ApiErrors from "../utils/apiErrors";
 import globalErrors from "../middlewares/globalErrors";

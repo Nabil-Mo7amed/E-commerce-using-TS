@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createSubcategory,
   deleteSubcategory,
+  filterData,
   getSubcategories,
   getSubcategory,
   updateSubcategory,
@@ -12,18 +13,37 @@ import {
   getSubcategoryValidator,
   updateSubcategoryValidator,
 } from "../utils/validation/subcategoriesValidator";
+import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
 
-const subCategoryRoute: Router = Router();
+const subCategoryRoute: Router = Router({ mergeParams: true });
 
 subCategoryRoute
   .route("/")
-  .get(getSubcategories)
-  .post(createSubcategoryValidator, createSubcategory);
+  .get(filterData, getSubcategories)
+  .post(
+    protectRoutes,
+    checkActive,
+    allowedTo("manager", "admin"),
+    createSubcategoryValidator,
+    createSubcategory
+  );
 
 subCategoryRoute
   .route("/:id")
   .get(getSubcategoryValidator, getSubcategory)
-  .put(updateSubcategoryValidator, updateSubcategory)
-  .delete(deleteSubcategoryValidator, deleteSubcategory);
+  .put(
+    protectRoutes,
+    checkActive,
+    allowedTo("manager", "admin"),
+    updateSubcategoryValidator,
+    updateSubcategory
+  )
+  .delete(
+    protectRoutes,
+    checkActive,
+    allowedTo("manager", "admin"),
+    deleteSubcategoryValidator,
+    deleteSubcategory
+  );
 
 export default subCategoryRoute;

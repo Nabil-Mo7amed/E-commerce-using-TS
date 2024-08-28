@@ -6,7 +6,7 @@ import database from "./config/database";
 const app: express.Application = express();
 dotenv.config();
 app.use(express.json());
-
+app.use(express.static('uploads'))
 let server: Server;
 Routes(app);
 

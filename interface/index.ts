@@ -1,7 +1,10 @@
+import { Users } from "./users";
 import { FilterData } from "./filterData";
 
-declare module 'express' {
+declare module "express" {
   interface Request {
-    filterData?: FilterData
+    filterData?: FilterData;
+    files?: any;
+    user?: Users;
   }
 }

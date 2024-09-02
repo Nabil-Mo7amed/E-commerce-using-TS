@@ -27,7 +27,7 @@ export const resizeImages = asyncHandler(
     //     .toFile(`uploads/products/${coverName}`)
     //   req.body.cover = coverName;
     // }
-    console.log(req.files);
+    // console.log(req.files);
 
     if (req.files) {
       if (req.files.cover) {
@@ -35,22 +35,24 @@ export const resizeImages = asyncHandler(
         await sharp(req.files.cover[0].buffer)
           .toFormat("png")
           .png({ quality: 95 })
-          .toFile(`uploads/products/cover/${coverName}`);
+          .toFile(`uploads/products/${coverName}`);
         req.body.cover = coverName;
       }
       if (req.files.images) {
         req.body.images = [];
-        req.files.images.map(async (img: any, index: number) => {
+
+        await Promise.all(req.files.images.map(async (img: any, index: number) => {
           const imageName: string = `Product-${Date.now()}N${index + 1}.png`;
           await sharp(img.buffer)
             .toFormat("png")
             .png({ quality: 95 })
-            .toFile(`uploads/products/images/${imageName}`);
+            .toFile(`uploads/products/${imageName}`);
 
           req.body.images.push(imageName);
+
+        }));
         console.log(req.body.images);
 
-        });
       }
     }
     next();
